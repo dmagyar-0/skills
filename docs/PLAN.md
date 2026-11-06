@@ -171,13 +171,25 @@ run on Sonnet 4.6 → tighten wording → commit.
 
 ---
 
-## 6. Open decisions
+## 6. Decisions (2026-11-06)
 
-1. Where intents live: `intent/` in each product repo (playbook default), a dedicated
-   intent repo, or Jira/ADO as source of truth with linkage.
-2. VCS/CI at work: GitHub + Actions, GitLab, or Azure DevOps (changes the CI examples
-   and review mechanism).
-3. Surfaces available: Claude Code CLI/IDE only, or also claude.ai/Cowork for
-   non-engineers writing intents. Model access via Anthropic API, Bedrock, Vertex or Foundry.
-4. Whether installing public plugins (superpowers, official plugins) is allowed, or
-   everything must be vendored into this repo.
+1. **No plugin.** Must work in Claude Code *and* Kiro. Both support the open Agent Skills
+   format (`SKILL.md` with `name` + `description`; `scripts/`, `references/`, `assets/`;
+   auto-selection by description or `/name`). Skills live in this repo under `skills/`
+   and `install.sh` copies them to `.claude/skills/` and/or `.kiro/skills/` of a project.
+   Frontmatter is limited to the portable keys: name, description, license, compatibility,
+   metadata. No Claude-only keys, hooks or subagents in the starter set.
+2. **Intents live in the product repos**, one folder per change: `intent/<slug>/` with
+   `intent.md`, `spec.md`, `plan.md`. The merge request is the approval record.
+3. **GitLab CI** is guidance only: see `docs/gitlab-ci.md` for what stays out of skills
+   and where CI, CODEOWNERS, approval rules and protected environments plug in.
+4. **Start small.** Phase 1 = `sdlc-intent`, `sdlc-spec`, `sdlc-plan`, `sdlc-verify` plus
+   a stdlib artifact checker. Everything else in section 3 is backlog.
+
+## 7. Status
+
+Done (phase 1): the four skills above, templates, worked examples (claims status),
+`check_artifact.py`, `install.sh`, `tests/check_repo.py`, GitLab guidance.
+
+Not yet done: trying the skills on a real repo with Sonnet 4.6 in Claude Code and in Kiro
+(trigger reliability + output quality), then `sdlc-review` + `REVIEW.md` as the next step.
